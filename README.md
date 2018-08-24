@@ -1,5 +1,8 @@
 # reverse-geocode
-Basic Java Spring command line utility to reverse geocode a `input.csv` file using openstreetmap (nominatim)
+Small Java command line utility to reverse geocode a `input.csv` file using openstreetmap (nominatim).
+
+Visual Studio Code, springframework.boot, Gradle
+
 ```
 Example input.csv file: Lon, Lat (X,Y)
 -58.4962295, -34.546371

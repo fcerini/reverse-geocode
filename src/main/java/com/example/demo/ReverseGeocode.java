@@ -50,7 +50,8 @@ public class ReverseGeocode
 				String[] coord = line.split(",");
 
 				String sURL = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="
-								+ coord[1].trim()+"&lon=" + coord[0].trim();
+								+ coord[1].trim()+"&lon=" + coord[0].trim()
+								+ "&limit=1&zoom=18&addressdetails=1";
 
 				// Connect to the URL using java's native library
 				URL url = new URL(sURL);
@@ -61,9 +62,22 @@ public class ReverseGeocode
 				// Convert to a JSON object to print data
 				JsonParser jp = new JsonParser(); //from gson
 				JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
-				JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
-				String dir = rootobj.get("display_name").getAsString(); //just grab the zipcode
-				System.out.println(dir);
+				JsonObject rootobj = root.getAsJsonObject();
+
+				JsonObject address = rootobj.get("address").getAsJsonObject();
+				
+				String number ="0";
+				if ( address.get("house_number") != null){
+					number = address.get("house_number").getAsString();
+				}
+					
+				String dir = number 
+							+ "," +address.get("road").getAsString()
+							+ "," + rootobj.get("category").getAsString()
+							+ "," + rootobj.get("type").getAsString()
+							+ "," + rootobj.get("addresstype").getAsString();
+
+				System.out.println(line + "," + dir);
 
 				writer.println( line + "," + dir);
 			}

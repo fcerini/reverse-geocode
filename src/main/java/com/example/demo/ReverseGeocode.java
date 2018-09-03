@@ -67,12 +67,24 @@ public class ReverseGeocode
 				JsonObject address = rootobj.get("address").getAsJsonObject();
 				
 				String number ="0";
-				if ( address.get("house_number") != null){
-					number = address.get("house_number").getAsString();
+				String road ="SN";
+				try {
+					
+					if ( address.get("house_number") != null){
+						number = address.get("house_number").getAsString();
+					}
+					
+					if ( address.get("road") != null){
+						road = address.get("road").getAsString();
+					} else {
+						road = address.get(address.keySet().toArray()[0].toString()).getAsString();
+					}
+
+				} catch  (Exception e) {
+					System.out.println(e.getMessage());
 				}
 					
-				String dir = number 
-							+ "," +address.get("road").getAsString()
+				String dir = number + "," + road
 							+ "," + rootobj.get("category").getAsString()
 							+ "," + rootobj.get("type").getAsString()
 							+ "," + rootobj.get("addresstype").getAsString();

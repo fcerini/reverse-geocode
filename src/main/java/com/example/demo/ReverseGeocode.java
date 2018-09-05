@@ -26,8 +26,11 @@ public class ReverseGeocode
 	implements CommandLineRunner {
 
 	public static void main(String[] args) {
-		System.out.println("Basic Java Spring command line utility to reverse geocode a input.csv file using openstreetmap (nominatim), here or google.");		
-		System.out.println("Available input parameters -osm -here -google");		
+		System.out.println("Basic Java Spring command line utility to reverse geocode a input.csv file.");		
+		System.out.println("Available input parameters: osm or here openstreetmap (nominatim) or here maps.");		
+		System.out.println("osm: openstreetmap (nominatim).");		
+		System.out.println("here: here maps(nokia).");		
+		System.out.println("==================================================================");		
 		SpringApplication.run(ReverseGeocode.class, args);
 	}
 
@@ -35,10 +38,12 @@ public class ReverseGeocode
 	public void run(String... args) throws Exception {
 		try {
 			Parser parser;
-			String option = "osm";
+			String option = "here";
 			if (args.length > 0) {
 				option = args[0];
-				System.out.println("Default: -osm ");
+				System.out.println("Reverse Geocode : " + option);
+			} else {
+				System.out.println("Reverse Geocode Default: -osm ");
 			}
 
 			if (option.contains("osm")){
@@ -59,7 +64,7 @@ public class ReverseGeocode
 			SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
 			Date now = new Date();
 			String strDate = sdfDate.format(now);
-			PrintWriter writer = new PrintWriter("output"+ strDate +".csv");
+			PrintWriter writer = new PrintWriter("output"+ strDate +"_"+ option +".csv");
 
 			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);

@@ -26,15 +26,35 @@ public class ReverseGeocode
 	implements CommandLineRunner {
 
 	public static void main(String[] args) {
-		System.out.println("Basic Java Spring command line utility to reverse geocode a input.csv file using openstreetmap (nominatim)");		
+		System.out.println("Basic Java Spring command line utility to reverse geocode a input.csv file using openstreetmap (nominatim), here or google.");		
+		System.out.println("Available input parameters -osm -here -google");		
 		SpringApplication.run(ReverseGeocode.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		try {
+			Parser parser;
+			String option = "osm";
+			if (args.length > 0) {
+				option = args[0];
+				System.out.println("Default: -osm ");
+			}
 
-			File file = new File("input.csv");
+			if (option.contains("osm")){
+				parser = new OSM();
+			} else if (option.contains("here")){
+				parser = new Here();
+			} else if (option.contains("google")){
+				parser = new Google();
+			} else {
+				parser = null;
+				System.out.println("Parameter " + args[0] + " not available.");
+				System.exit(0);
+			}
+
+			File file = new File("input.csv");			
+
 
 			SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
 			Date now = new Date();
@@ -47,51 +67,24 @@ public class ReverseGeocode
 			while ((line = bufferedReader.readLine()) != null) {
 				// System.out.println(line);
 				
-				String[] coord = line.split(",");
+				String[] coord = line.split(",");				
 
-				String sURL = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="
-								+ coord[1].trim()+"&lon=" + coord[0].trim()
-								+ "&limit=1&zoom=18&addressdetails=1";
+				String sURL = parser.genURL(coord[1].trim(), coord[0].trim());
 
-				// Connect to the URL using java's native library
 				URL url = new URL(sURL);
 				URLConnection request = url.openConnection();
 				request.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 				request.connect();
 
-				// Convert to a JSON object to print data
-				JsonParser jp = new JsonParser(); //from gson
-				JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+				JsonParser jp = new JsonParser();
+				JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
 				JsonObject rootobj = root.getAsJsonObject();
 
-				JsonObject address = rootobj.get("address").getAsJsonObject();
-				
-				String number ="0";
-				String road ="SN";
-				try {
-					
-					if ( address.get("house_number") != null){
-						number = address.get("house_number").getAsString();
-					}
-					
-					if ( address.get("road") != null){
-						road = address.get("road").getAsString();
-					} else {
-						road = address.get(address.keySet().toArray()[0].toString()).getAsString();
-					}
+				String output = parser.parse( rootobj );
 
-				} catch  (Exception e) {
-					System.out.println(e.getMessage());
-				}
-					
-				String dir = number + "," + road
-							+ "," + rootobj.get("category").getAsString()
-							+ "," + rootobj.get("type").getAsString()
-							+ "," + rootobj.get("addresstype").getAsString();
+				System.out.println(line + "," + output);
 
-				System.out.println(line + "," + dir);
-
-				writer.println( line + "," + dir);
+				writer.println( line + "," + output);
 			}
 			fileReader.close();
 			writer.close();

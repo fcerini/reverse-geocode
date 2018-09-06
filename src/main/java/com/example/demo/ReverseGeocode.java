@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,6 +26,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ReverseGeocode
 	implements CommandLineRunner {
 
+	@Value("${here.app.id}")
+	public String hereAppId;
+
+	@Value("${here.app.code}")
+	public String hereAppCode;
+
+	@Value("${google.maps.key}")
+	public String googleMapsKey;
+
+	
 	public static void main(String[] args) {
 		System.out.println("Basic Java Spring command line utility to reverse geocode a input.csv file.");		
 		System.out.println("Available input parameters: osm or here openstreetmap (nominatim) or here maps.");		
@@ -38,20 +49,26 @@ public class ReverseGeocode
 	public void run(String... args) throws Exception {
 		try {
 			Parser parser;
-			String option = "here";
+			String option = "google";
 			if (args.length > 0) {
 				option = args[0];
 				System.out.println("Reverse Geocode : " + option);
 			} else {
-				System.out.println("Reverse Geocode Default: -osm ");
+				System.out.println("Reverse Geocode Default: " + option);
 			}
 
 			if (option.contains("osm")){
 				parser = new OSM();
 			} else if (option.contains("here")){
-				parser = new Here();
+				Here aux = new Here();
+				aux.appId = hereAppId;
+				aux.appCode = hereAppCode;
+				parser = aux;
+
 			} else if (option.contains("google")){
-				parser = new Google();
+				Google aux = new Google();
+				aux.key = googleMapsKey;
+				parser = aux;
 			} else {
 				parser = null;
 				System.out.println("Parameter " + args[0] + " not available.");

@@ -2,16 +2,22 @@ package com.example.demo;
 
 import com.google.gson.JsonObject;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * Here
  */
 public class Here implements Parser {
 
+	public String appId;
+	public String appCode;
+
+
     @Override
     public String genURL(String lat, String lon) {
         return "https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?"
         + "prox="+ lat +"%2C"+ lon +"%2C50&mode=retrieveAddresses&maxresults=1&gen=9"
-        + "&app_id=G0ngmj6xB03FeSkntopj&app_code=0z7fzCO8eEl3oObk8j2yOw";
+        + "&app_id="+ appId +"&app_code=" + appCode;
 
     }
 

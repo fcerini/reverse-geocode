@@ -30,8 +30,13 @@ public class Google implements Parser {
 
             JsonArray address = result.get("address_components").getAsJsonArray();
             
-            number = address.get(0).getAsJsonObject().get("long_name").getAsString();
-            road = address.get(1).getAsJsonObject().get("long_name").getAsString();
+            if ( address.get(0).getAsJsonObject().get("types").getAsJsonArray().get(0).getAsString()
+                    .contains("street_number") ) {
+                number = address.get(0).getAsJsonObject().get("long_name").getAsString();
+                road = address.get(1).getAsJsonObject().get("long_name").getAsString();
+            } else {
+                road = address.get(0).getAsJsonObject().get("long_name").getAsString();
+            }
 
             out =  number + "," + road
             + "," + result.get("geometry").getAsJsonObject().get("location_type").getAsString()

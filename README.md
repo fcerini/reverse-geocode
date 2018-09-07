@@ -1,5 +1,12 @@
 # reverse-geocode
-Small Java command line utility to reverse geocode a `input.csv` file using openstreetmap (nominatim).
+Small Java command line utility to reverse geocode a `input.csv` file.
+
+```
+Available input parameters:
+osm: openstreetmap (nominatim).
+here: here maps(nokia).
+google: google maps.
+```
 
 Visual Studio Code, springframework.boot, Gradle
 
@@ -30,5 +37,15 @@ Example outputYYYY_MM_DD_hh_mm_here.csv file
 -58.4962295, -34.546371, 101,3151,Méjico,houseNumber,address,interpolated
 -58.54344, -34.5352185, 102,6672,5 de Julio,houseNumber,address,pointAddress
 -58.6440954999993, -34.4856159999997, 999,1326,Basualdo,houseNumber,address,interpolated
+
+```
+
+```
+Example outputYYYY_MM_DD_hh_mm_google.csv file
+-58.7062114999994,-34.4229834999998, 1,961,Moreno,ROOFTOP,street_address
+-58.382857,-34.595936, 100,1072,Cerrito,ROOFTOP,street_address
+-58.4962295, -34.546371, 101,3138,Méjico,RANGE_INTERPOLATED,street_address
+-58.54344, -34.5352185, 102,6661,5 de Julio,ROOFTOP,street_address
+-58.6440954999993, -34.4856159999997, 999,1199,Basualdo,RANGE_INTERPOLATED,street_address
 
 ```

@@ -38,9 +38,10 @@ public class ReverseGeocode
 	
 	public static void main(String[] args) {
 		System.out.println("Basic Java Spring command line utility to reverse geocode a input.csv file.");		
-		System.out.println("Available input parameters: osm or here openstreetmap (nominatim) or here maps.");		
+		System.out.println("Available input parameters:");		
 		System.out.println("osm: openstreetmap (nominatim).");		
 		System.out.println("here: here maps(nokia).");		
+		System.out.println("google: google maps.");		
 		System.out.println("==================================================================");		
 		SpringApplication.run(ReverseGeocode.class, args);
 	}
